@@ -1,0 +1,14 @@
+\definepapersize[A4]
+\setupbodyfont[14pt]
+\noheaderandfooterlines 
+\starttext
+2. A generalized version of the mutual exclusion problem in which up to L processes (L $\ge$ 1) are allowed to be in their critical section simultaneously is known as the L-exclusion problem. Precisely, if fewer that L processes are in the critical section at any time, and one more process wants to enter its critical section, then it must be allowed to do so. Modify Ricart-Agrawala's algorithm to solve the L-exclusion problem.
+
+\blank[2*big]
+
+{\bf RA1. } Each process seeking entry into its CS sends a timestamped request to every other process in the system. \\
+{\bf RA2. } A process receiving a request sends an acknowledgment back to the sender, only when (i) the process is not interested in entering tis CS, or (ii) the process is trying to enter tis CS, but timestamp is larger that that of the sender. If the process is already in its CS, then it will bffer all requests until its exit from CS. \\
+{\bf RA3. } When it receives an acknowledgment from each of the remaining n - E (E indicates the number of processes in their critical sections and E < L) processes, sends an entry message to each of the remaining n - E processes, then executes its critical secion. \\
+{\bf RA3. } Upon exit from its CS, a process must send acknowledgment to each of the pending requests before making a new request or executing other actions. \\
+
+\stoptext

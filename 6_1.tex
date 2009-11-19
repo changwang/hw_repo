@@ -1,0 +1,26 @@
+\definepapersize[A4]
+\setupbodyfont[14pt]
+\noheaderandfooterlines 
+\starttext
+
+1. Let the maximum clock drift in two different clocks be 1 in $10^{6}$. What will be the maximum difference between the readings of the two clocks 24 hours after they have been synchronized? What should be the resynchronization interval, so that the skew does not exceed 20 msec?
+
+\blank[2*big]
+
+Here the drift rate $\rho=10^{-6}$.\\
+After 24 hours which are $24 \times 60 \times 60 = 86400$ seconds,\\
+the difference between the readings of the two clocks\\
+$
+\Delta C = \rho \cdot (24 \times 60 \times 60)
+= 10^{6} \times 86400
+= 0.0864$ second
+$= 86.4$ msec.
+
+\blank[2*big]
+
+If the skew $\delta \leq 20$ msec.\\
+$
+R= 0.02 \times 10^{6} = 2 \times 10^{4}
+$ seconds.
+
+\stoptext

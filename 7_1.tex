@@ -1,0 +1,23 @@
+\definepapersize[A4]
+\setupbodyfont[14pt]
+\noheaderandfooterlines 
+\starttext
+1. In Ricart and Agrawala's distributed mutual exclusion algorithm, show that: \blank
+(a) Processes enter their critical sections in the order of their request timestamps.
+
+\blank[2*big]
+
+Suppose here process {\bf j} enters critical section before process {\bf i}, and ${\bf t_j > t_i}$. \\
+Before process {\bf j} enters critical section, according to {\bf guard 4}, N in process {\bf j} should equal to n - 1, but {\bf guard 2a} guarantees that process {\bf i} can not send an acknowledgment to process {\bf j} due to $t_j > t_i$.\\
+So, N in process {\bf j} must be less than n - 1, which means process {\bf j} could not enter critical section before process {\bf i}.
+
+\blank[2*big]
+
+(b) Correctness is guaranteed even if the channels are not FIFO.
+
+\blank[2*big]
+
+Because this algorithm maintains a acyclic waitfor chain. Each process waits for the other process ahead of it to send an acknowledgment. \\
+Still use the above example, even if process {\bf i} received m(j, req, $t_j$) earlier than process {\bf j} received m(i, req, $t_i$), and ${\bf t_j > t_i}$, and due to the algorithm, process {\bf i} has a higher rank than process {\bf j} in waitfor chain, therefore, process {\bf i} enters the critical section before process {\bf j}. So, it is unrelated to channel, but the timestamp.
+
+\stoptext

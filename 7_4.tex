@@ -1,0 +1,33 @@
+\definepapersize[A4]
+\setupbodyfont[14pt]
+\noheaderandfooterlines 
+\starttext
+4. In the Suzuki-Kasami algorithm, prove the liveness property that any process requesting a token eventually receives the token. Also compute an upper bound on the number of messages exchanged in the system before the token is received.
+\blank
+
+{\bf Proof of liveness}
+\blank
+Consider a process i requesting the token. Here are the situations.
+{\bf Case 1}: \\
+If process i holds the token, of course it will enter its critical section immediately.
+\blank
+
+{\bf Case 2}: \\
+Process i doesn't hold the token, then sends a request {\bf REQ(i, num)} to every other process.
+\blank
+{\bf Case 2-1}: \\
+If process j (j $\neq$ i) holds the token and plans to execute its critical section. According to the algorithm, process j will append process i to the rear of Q, because req[i] = last[i] + 1 in process j. No matter how many processes are before process i, due to the FIFO property of Q, process i will eventually be the head of Q, then get the token and enter its critical section.
+\blank
+{\bf Case 2-2}: \\
+If process j just exists its critical section, then it will dispatch the token to the process in the front of the Q, and this process will do the same procedure as {\bf Case 2-1}. 
+\blank
+So, Suzuki-Kasami algorithm garantees the liveness property.
+
+\blank
+
+{\bf Upper bound messages}
+\blank
+
+Suppose this time process i requests the token. The upper bound case should be this, before process i requests the token, every other process k also requests the token. The total number of messages required to complete one visit to its critical section is {\bf n (number of processes in the system)}. Then the upper bound on the number of messages exchanged in the system should equal to $ \bf{(n-1) \times n + n = n^{2} }$.
+
+\stoptext

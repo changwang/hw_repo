@@ -1,0 +1,31 @@
+\definepapersize[A4]
+\setupbodyfont[14pt]
+\noheaderandfooterlines 
+\starttext
+
+11. Five processes {\bf 0, 1, 2, 3, 4} in a completely connected network decide to maintain a distributed bulletin board. No central version of it physically exists, but every process maintains a version of it. To post a new bulletin, each process broadcasts every message to the other four processes, and recipient processes willing to respond broadcast their responses in a similar manner. to make any sense from a response, every process must accept every message and response in causal order, so a process receiving a message will postpone its acceptance unless it is confident that no other message causally ordered before this one will arrive in future.
+\blank
+To detect causality, the implmentation uses vector clocks. Each message or response carries the appropriate vector timestamp. Figure out (a) an algorithm for assigning timestamps, and (b) the corresponding algorithm using which a process will decide whether to accept a message immediately, or postpone tis acceptance.
+\blank[2*big]
+The body of message msg has three fields: (sender, type vt), where
+\startitemize[1]
+\item {\bf sender} = identifier of the sending process
+\item {\bf type} = post respond
+\item {\bf vt} = vector timestamp assigned by the sender
+\stopitemize
+\blank
+\starttyping
+program		assigntime
+define m :		msg
+       N : 		integer { number of responds }
+
+initially N = 0
+
+do N = 0 		->	VC(m)[i] = 1
+\forall j : j \ne i :: VC(m)[j] = 0 \\
+\square	m.type = post	\to j = m.sender \\
+res.type = respond \\
+VC(res)[i] = VC(m)[i] + 1 \\
+\forall j : j \ne i :: VC(res)[j] = VC(res)[j]
+\stoptyping
+\stoptext

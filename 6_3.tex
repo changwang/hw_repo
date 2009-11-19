@@ -1,0 +1,19 @@
+\definepapersize[A4]
+\setupbodyfont[14pt]
+\noheaderandfooterlines 
+\starttext
+
+3. Calculate the vector clock values of the ten events {\bf \em a-j} in the diagram of Exercise 2. Use the vector clock values to prove that {\bf \em (d,h)} are concurrent events, but {\bf \em f} is causally ordered before {\bf \em e}.
+\blank[20*big]
+VC(d)=(4, 2)\\
+VC(h)=(2, 3)\\
+Due to 4 > 2 and 2 < 3,
+VC(d) and VC(h) are incomparable, so we say that {\bf \em (d,h)} are concurrent events.
+
+\blank[big]
+
+VC(f)=(1, 1)\\
+VC(e)=(5, 4)\\
+Due to 1 < 5 and 1 < 4,
+so we say that ${\bf \em f \prec e}$.
+\stoptext
