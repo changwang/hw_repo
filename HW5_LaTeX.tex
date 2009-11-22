@@ -1,0 +1,98 @@
+\documentclass{report}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\begin{document}
+\title{HomeWork 5}
+\author{Chang Wang}
+\date{\today}
+\maketitle
+\section{Give a recurrence to describe the space used by a k-range tree for n records. Solve this recurrence relation.}
+
+Let P be a set of n points in k-dimensional space, where k $\ge$ 2. We construct a balanced binary search tree on the $k^{th}$ field of the point, with all the records in the leaves, considering it as the primary search tree. here we call P(v) canonical subset which means the subset of points stored in the leaves of the subtree rooted at a node v. For each non-leaf node v we construct an auxiliary tree $T_{aux}(v)$; and the tree $T_{aux}(v)$ is a (k-1)-dimensional range tree for the points in P(v). And this (k-1)-dimensional range tree recursively constructs other range tree, means each non-leaf $v^{'}$ build a balanced binary search tree based on $(k-2)^{th}$ field with points in P($v^{'}$). The recursion stops when we are left with points restricted to their $1^{th}$ field, they are stored in a 1-dimensional range tree -- a balanced binary search tree. \\[0.5cm]
+\begin{algorithm}
+\caption{Build-KRT(P, k)}
+\algsetup{indent=2em, linenosize=\small, linenodelimiter=.}
+\begin{algorithmic}
+
+   \IF{$k < 1$}
+   \STATE $return NULL$
+   \ENDIF
+   \STATE $T \leftarrow Build-BST(P, k-1)$
+   \STATE $P_{left} \leftarrow p_{k_{j}} \{ \forall j | p_{k_{j}} < p_{k_{mid}} \}$
+   \STATE $P_{right} \leftarrow p_{k_{j}} \{ \forall j | p_{k_{j}} > p_{k_{mid}} \}$
+   \COMMENT{Split P into two subsets: one subset $P_{left}$ contains the points with $k^{th}$ field less than or equal to $p_{k_{mid}}$ the median of $k^{th}$ field, and the other subset $P_{right}$ contains the points with $k^{th}$ field larger than $p_{k_{mid}}$}
+   \WHILE{$k > 1$}
+   \STATE $v_{left} \leftarrow Build-KST(P_{left}, k-1)$
+   \STATE $v_{right} \leftarrow Build-KST(P_{right}, k-1)$
+   \ENDWHILE
+   \STATE Create a node v storing $p_{k_{mid}}$
+   \STATE $v.left = v_{left}$
+   \STATE $v.right = v_{right}$
+   \RETURN $v$
+\end{algorithmic}
+\end{algorithm}
+The space for building the binary search tree is O9n), so the storage should be: \\
+\[
+S(n, k) \le \left\{\begin{array}{ll}
+C_{1} \cdot n & k = 1 \\
+2(k-1)S(\frac {n}{2}, k-1) + C_{2} \cdot n &  k > 1
+\end{array} \right.
+\]
+Use induction proof, we can get:
+\[
+S(n, k) \le \left\{\begin{array}{ll}
+O(n) & k = 1 \\
+O(n\log^{k-1}n) &  k > 1
+\end{array} \right.
+\]
+
+\section{How much preprocessing time is required to setup the k-range tree? Compare this with the k-d tree.}
+Let $T_k(n)$ denote the construction time for a k-range tree on a set of n points in k-dimensional space. The construction of a k-dimensional range tree consists of building a balanced binary search tree, which takes time $O(n\log n)$, and the construction of auxiliary tree. At the nodes at any depth of the primary search tree, each point is stored in exactly one auxiliary tree. The time required to build all auxiliary tree of the nodes at some depth is $O(T_{k-1}(n))$. The total construction time satisfies:
+$$
+T_k(n) = C_{1} \cdot \log n \cdot T_{k-1}(n) + C_{2} \cdot n\log n
+$$
+This recurrence solves to $O(n\log^{k-1} n)$. \\
+Because k-d tree contains only one binary search tree, the preprocessing time is $O(n\log n)$, including sorting the points and building the tree. \\
+Clearly, the preprocessing time of k-d tree is much better than k-range tree.
+
+\section{Give an efficient algorithm to answer an orthogonal range query in a k-range tree}
+Here is the description of an orthogonal range query in a k-range tree. Suppose the given range is $\bf (L_1, H_1) \times (L_2, H_2) \times ... \times (L_k, H_k) $. First search the primary search tree, to locate the split node $v_{split}$ which leads to node u and $u^{'}$, with $u_{k} \leq L_{k}$ and $u_{k}^{'} \geq H_{k}$ . There will be $O(\log n)$ nodes on the path from $v_{split}$ to u and $u^{'}$, whose canonical subsets contain all the points whose k-th field is in the correct range. Then recursively repeat this procedure on these canonical subsets on the k-1 field. In each k-1 field range tree, we select $O(\log n)$ canonical subsets, which means there will be $O(\log^{2} n)$ canonical subsets in the k-1 field range tree. Together, they contain all points whose k-th and k-1th field lie in the correct ranges. Repeating this until reach the $1^{th}$ range trees. In these trees, we find the points whose first field lies in the correct range. Then this approach leads to the required result.
+
+\begin{algorithm}
+\caption{KRangeQuery(T, k)}
+\algsetup{indent=2em, linenosize=\small, linenodelimiter=.}
+\begin{algorithmic}
+
+   \STATE $v_{split} \leftarrow FindSplitNode(T, L_{k}, H_{k})$
+   \IF{$v_{split}$ is leaf}
+   \STATE report point stored at $v_{split}$
+   \ELSE
+   \STATE $v \leftarrow LeftTreeRoot(v_{split})$
+   \ENDIF
+   \WHILE{v is not leaf}
+   		\IF{$u_{k} \leq v_{k}$}
+   		\STATE KRangeQuery(RightChildTree(v), k-1)
+   		\STATE $v \leftarrow LeftTreeRoot(v)$
+		\ELSE
+		\STATE $v \leftarrow RightTreeRoot(v)$
+   		\ENDIF
+   \ENDWHILE
+   
+   \WHILE{$v^{'}$ is not leaf}
+   		\IF{$u_{k}^{'} \geq v_{k}^{'}$}
+   		\STATE KRangeQuery(LeftChildTree($v^{'}$), k-1)
+   		\STATE $v^{'} \leftarrow RightTreeRoot(v^{'})$
+		\ELSE
+		\STATE $v^{'} \leftarrow LeftTreeRoot(v^{'})$
+   		\ENDIF
+   \ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\section{Give the recurrence relation for the time complexity of your ORQ algorithm in a k-range tree for n recoreds. Solve this recurrence relation.}
+The time of searching primary search tree is $O(\log n)$, The recurrence relation is:
+$$
+T(n, k) \leq 2\log nT(\frac {n}{2}, k-1) + C\log n
+$$
+we can easily solve this reurrence relation using induction proof, which is $O(\log^{k-1} n)$. It is better than the k-d tree's $O(n^{1- \frac {1}{k}})$
+\end{document}
