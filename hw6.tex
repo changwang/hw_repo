@@ -1,0 +1,277 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shadows,arrows}
+
+\begin{document}
+\title{Homework 6}
+\author{Chang Wang}
+\date{\today}
+
+\maketitle
+
+\section{Consider the problem of merging two sorted list A(1..k) and B(1..m).}
+\subsection{}
+
+Due to the page layout, I could not exhibit the whole figure in one page, so I divided it into separated parts. In the following figures, which stand for the decision tree. Each circle denotes a comparison, and the leave are in the ellipses.
+\\
+There should be {\bf 36 leaves} in the decision tree.
+
+\begin{tikzpicture}[
+		state/.style={circle, draw=none, text centered, anchor=north, text=black, circular drop shadow},
+    leaf/.style={rectangle, draw=none, circular drop shadow,
+        text centered, anchor=north, text=white},
+    level distance=1cm, sibling distance=15cm
+]
+
+\node [state] (Root) {$a_{1}, b_{1}$} [->]
+	child{ [sibling distance=12cm]
+		node [state] {$a_{2}, b_{1}$}
+		child {
+			node [state] {$a_{3}, b_{1}$}
+			child {
+				node  [state]  {$a_{4}, b_{1}$}
+				child {
+					node  [state]  {$a_{5}, b_{1}$}
+					child {  [sibling distance=10cm]
+						node  [state]  {$a_{6}, b_{1}$}
+						child {  [sibling distance=3cm]
+							node  [state]  {$a_{7}, b_{1}$}
+							child {  [sibling distance=4cm]
+								node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}a_{5}a_{6}a_{7}b_{1}b_{2}$}
+							}
+							child {  [sibling distance=4cm]
+								node  [state]  {$a_{7}, b_{2}$}
+								child { node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}a_{5}a_{6}b_{1}a_{7}b_{2}$} }
+								child { node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}a_{5}a_{6}b_{1}b_{2}a_{7}$} }
+							}
+						}
+						child {   [sibling distance=2cm]
+							node  [state]  {$a_{6}, b_{2}$}
+							child { [sibling distance=4cm]
+								node [state] {$a_{7}, b_{2}$}
+								child { node [leaf] {$a_{1}a_{2}a_{3}a_{4}a_{5}b_{1}a_{6}a_{7}b_{2}$} }
+								child { node [leaf] {$a_{1}a_{2}a_{3}a_{4}a_{5}b_{1}a_{6}b_{2}a_{7}$} }
+							}
+							child { node [leaf] {$a_{1}a_{2}a_{3}a_{4}a_{5}b_{1}b_{2}a_{6}a_{7}$} }
+						}
+					}
+				}
+			}
+		}
+	}
+;
+
+\end{tikzpicture}
+
+
+\begin{tikzpicture}[
+		state/.style={circle, draw=none, text centered, anchor=north, text=black, circular drop shadow},
+    leaf/.style={rectangle, draw=none, circular drop shadow,
+        text centered, anchor=north, text=white},
+    level distance=1cm, sibling distance=15cm
+]
+
+\node [state] (Root) {$a_{1}, b_{1}$} [->]
+	child{ [sibling distance=12cm]
+		node [state] {$a_{2}, b_{1}$}
+		child {  [sibling distance=5cm]
+			node [state] {$a_{3}, b_{1}$}
+			child { [sibling distance=3cm]
+				node  [state]  {$a_{4}, b_{1}$}
+				child { [sibling distance=3cm]
+					node  [state]  {$a_{5}, b_{1}$}
+					child {  [sibling distance=3cm]
+						node  [state]  {$a_{5}, b_{2}$}
+						child {  [sibling distance=3cm]
+							node  [state]  {$a_{6}, b_{2}$}
+							child {   [sibling distance=5cm]
+								node  [state]  {$a_{7}, b_{2}$} 
+								child { node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}b_{1}a_{5}a_{6}a_{7}b_{2}$} }
+								child { node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}b_{1}a_{5}a_{6}b_{2}a_{7}$} }
+							}
+							child { node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}b_{1}a_{5}b_{2}a_{6}a_{7}$} }
+						}
+						child { node  [leaf]  {$a_{1}a_{2}a_{3}a_{4}b_{1}b_{2}a_{5}a_{6}a_{7}$} }
+					}
+				}
+			}
+		}
+	}
+;
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[
+		state/.style={circle, draw=none, text centered, anchor=north, text=black, circular drop shadow},
+    leaf/.style={rectangle, draw=none, circular drop shadow,
+        text centered, anchor=north, text=white},
+    level distance=1cm, sibling distance=15cm
+]
+
+\node [state] (Root) {$a_{1}, b_{1}$} [->]
+	child{
+		node [state] {$a_{2}, b_{1}$}
+		child { 
+			node [state] {$a_{3}, b_{1}$}
+			child {
+				node  [state]  {$a_{4}, b_{1}$}
+				child { [sibling distance=5cm]
+					node  [state]  {$a_{5}, b_{1}$}
+					child { [sibling distance=5cm]
+						node  [state]  {$a_{5}, b_{2}$}
+						child { [sibling distance=3cm]
+							node  [state]  {$a_{6}, b_{2}$}
+							child {  [sibling distance=4cm]
+								node  [state]  {$a_{7}, b_{2}$}
+								child { node  [leaf]  {$a_{1}a_{2}a_{3}b_{1}a_{4}a_{5}a_{6}a_{7}b_{2}$} }
+								child { node  [leaf]  {$a_{1}a_{2}a_{3}b_{1}a_{4}a_{5}a_{6}b_{2}a_{7}$} }
+							}
+							child { node [leaf] {$a_{1}a_{2}a_{3}b_{1}a_{4}a_{5}b_{2}a_{6}a_{7}$} }
+						}
+						child { node  [leaf]  { $a_{1}a_{2}a_{3}b_{1}a_{4}b_{2}a_{5}a_{6}a_{7}$} }
+					}
+					child { node  [leaf]  { $a_{1}a_{2}a_{3}b_{1}b_{2}a_{4}a_{5}a_{6}a_{7}$} }
+				}
+			}
+		}
+	}
+;
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[
+		state/.style={circle, draw=none, text centered, anchor=north, text=black, circular drop shadow},
+    leaf/.style={rectangle, draw=none, circular drop shadow,
+        text centered, anchor=north, text=white},
+    level distance=1cm, sibling distance=15cm
+]
+
+\node [state] (Root) {$a_{1}, b_{1}$} [->]
+	child{ [sibling distance=12cm]
+		node [state] {$a_{2}, b_{1}$}
+		child {  [sibling distance=5cm]
+			node [state] {$a_{3}, b_{1}$}
+			child { [sibling distance=3cm]
+				node  [state]  {$a_{3}, b_{2}$}
+				child { [sibling distance=3cm]
+					node  [state]  {$a_{4}, b_{2}$}
+					child {  [sibling distance=3cm]
+						node  [state]  {$a_{5}, b_{2}$}
+						child {  [sibling distance=3cm]
+							node  [state]  {$a_{6}, b_{2}$}
+							child {   [sibling distance=5cm]
+								node  [state]  {$a_{7}, b_{2}$} 
+								child { node  [leaf]  {$a_{1}a_{2}b_{1}a_{3}a_{4}a_{5}a_{6}a_{7}b_{2}$} }
+								child { node  [leaf]  {$a_{1}a_{2}b_{1}a_{3}a_{4}a_{5}a_{6}b_{2}a_{7}$} }
+							}
+							child { node  [leaf]  {$a_{1}a_{2}b_{1}a_{3}a_{4}a_{5}b_{2}a_{6}a_{7}$} }
+						}
+						child { node  [leaf]  {$a_{1}a_{2}b_{1}a_{3}a_{4}b_{2}a_{5}a_{6}a_{7}$} }
+					}
+					child { node  [leaf]  {$a_{1}a_{2}b_{1}a_{3}b_{2}a_{4}a_{5}a_{6}a_{7}$} }
+				}
+				child { node  [leaf]  {$a_{1}a_{2}b_{1}b_{2}a_{3}a_{4}a_{5}a_{6}a_{7}$} }
+			}
+		}
+	}
+;
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[
+		state/.style={circle, draw=none, text centered, anchor=north, text=black, circular drop shadow},
+    leaf/.style={rectangle, draw=none, circular drop shadow,
+        text centered, anchor=north, text=white},
+    level distance=1cm, sibling distance=15cm
+]
+
+\node [state] (Root) {$a_{1}, b_{1}$} [->]
+	child{ [sibling distance=12cm]
+		node [state] {$a_{2}, b_{1}$}
+		child {  [sibling distance=3cm]
+			node [state] {$a_{2}, b_{2}$}
+			child {
+				node [state] {$a_{3}, b_{2}$}
+				child { [sibling distance=3cm]
+					node  [state]  {$a_{4}, b_{2}$}
+					child { [sibling distance=3cm]
+						node  [state]  {$a_{5}, b_{2}$}
+						child {
+							node  [state]  {$a_{6}, b_{2}$}
+							child { [sibling distance=5cm]
+								node  [state]  {$a_{7}, b_{2}$}
+								child { node  [leaf]  {$a_{1}b_{1}a_{2}a_{3}a_{4}a_{5}a_{6}a_{7}b_{2}$} }
+								child { node  [leaf]  {$a_{1}b_{1}a_{2}a_{3}a_{4}a_{5}a_{6}b_{2}a_{7}$} }
+							}
+							child { node  [leaf]  {$a_{1}b_{1}a_{2}a_{3}a_{4}a_{5}b_{2}a_{6}a_{7}$} }
+						}
+						child { node  [leaf]  {$a_{1}b_{1}a_{2}a_{3}a_{4}b_{2}a_{5}a_{6}a_{7}$} }
+					}
+					child { [sibling distance=4cm]
+						node [leaf] {$a_{1}b_{1}a_{2}a_{3}b_{2}a_{4}a_{5}a_{6}a_{7}$}
+					}
+				}
+				child { [sibling distance=4cm]
+					node [leaf] {$a_{1}b_{1}a_{2}b_{2}a_{3}a_{4}a_{5}a_{6}a_{7}$}
+				}
+			}
+			child { [sibling distance=4cm]
+				node [leaf] {$a_{1}b_{1}b_{2}a_{2}a_{3}a_{4}a_{5}a_{6}a_{7}$}
+			}
+		}
+	}
+;
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[
+		state/.style={circle, draw=none, text centered, anchor=north, text=black, circular drop shadow},
+    leaf/.style={rectangle, draw=none, circular drop shadow,
+        text centered, anchor=north, text=white},
+    level distance=1cm, sibling distance=12cm
+]
+
+\node [state] (Root) {$a_{1}, b_{1}$} [->]
+	child{  [sibling distance=3cm]
+		node [state] {$a_{1}, b_{2}$}
+		child {  [sibling distance=3cm]
+			node [state] {$a_{2}, b_{2}$}
+			child { [sibling distance=3cm]
+				node  [state]  {$a_{3}, b_{2}$}
+				child { [sibling distance=3cm]
+					node  [state]  {$a_{4}, b_{2}$}
+					child {  [sibling distance=3cm]
+						node  [state]  {$a_{5}, b_{2}$}
+						child {  [sibling distance=3cm]
+							node  [state]  {$a_{6}, b_{2}$}
+							child {  [sibling distance=5cm]
+								node  [state]  {$a_{7}, b_{2}$}
+								child { node  [leaf]  {$b_{1}a_{1}a_{2}a_{3}a_{4}a_{5}a_{6}a_{7}b_{2}$} }
+								child { node  [leaf]  {$b_{1}a_{1}a_{2}a_{3}a_{4}a_{5}a_{6}b_{2}a_{7}$} }
+							}
+							child {
+								node  [leaf]  {$b_{1}a_{1}a_{2}a_{3}a_{4}a_{5}b_{2}a_{6}a_{7}$}
+							}
+						}
+						child {
+							node  [leaf]  {$b_{1}a_{1}a_{2}a_{3}a_{4}b_{2}a_{5}a_{6}a_{7}$}
+						}
+					}
+					child {
+						node  [leaf]  {$b_{1}a_{1}a_{2}a_{3}b_{2}a_{4}a_{5}a_{6}a_{7}$}
+					}
+				}
+				child { node  [leaf]  {$b_{1}a_{1}a_{2}b_{2}a_{3}a_{4}a_{5}a_{6}a_{7}$}
+				}
+			}
+			child { node  [leaf]  {$b_{1}a_{1}b_{2}a_{3}a_{4}a_{5}a_{6}a_{7}$}
+			}
+		}
+		child {   node  [leaf]  {$b_{1}b_{2}a_{1}a_{2}a_{3}a_{4}a_{5}a_{6}a_{7}$}
+		}
+	}
+;
+
+\end{tikzpicture}
+
+\end{document}  
