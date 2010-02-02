@@ -1,0 +1,50 @@
+\documentclass[12pt, a4paper]{report}
+
+\title{Homework 2}
+\author{Chang Wang}
+
+\begin{document}
+
+\maketitle
+
+\section{Consider two arrays of integers B and C of size n. The two arrays are to be added to an array A of the same size. The elements of the array A then are to be added to a variable S. You have available a multiprocessor system of m processors with m been an exact divisor of n. The communication cost among any pair of processors is k cycles. Any operation performed by a processor takes r cycles.}
+
+\subsection{Number of cycles $T_{1}$ the above process will take when run in a single processor.}
+
+When there is a single processor. \\
+To add array B and C, number of cycles is $r \times n$. \\
+To sum array A, number of cycles is $r \times n$. \\
+There is no communication among processors. \\
+Total number of cycles $T_{1} = r \times n + r \times n = 2 \times r \times n$.
+
+\subsection{Minimum number of cycles $T_{2}$ the above process will take when run on m processors using pair-wise addition of partial sums.}
+Because m is an exact divisor of n, assume $L = n / m$. \\
+There are m processors available, to add array B and C, divide each array into L groups, and each group has m items. Each time, m processors could add m items together, and repeat this cycle L times. So number of cycles is $r \times L$. \\
+Now, we have array A with n items. Then dividing array A by L, which means dividing array A into m groups, each group has L items. We dispatch each group to 1 processor, and that processor will sum these L items into one partial sum. After that, there are m partial sums. Then asking m processors using pair-wise addition to sum these partial sums together. So number of cycles is $r \times L + (k+r) \times \log_{2} m$. \\
+Total number of cycles $T_{2} = r \times L + r \times L + (k+r) \times \log_{2} m = 2 \times r \times L + (k+r) \times \log_{2} m$. \\
+
+\subsection{Determine a condition that makes $T1 < T2$.}
+In order to make $T_{1} < T_{2}$, that is $2 \times r \times n < 2 \times r \times L + (k+r) \times \log_{2} m$. \\
+Resolve this in-equation, we can get $n < \frac {(k+r) \log_{2} m} {2r (1 - \frac {1} {m})}$. \\
+So, when $n < \frac {(k+r) \log_{2} m} {2r (1 - \frac {1} {m})}$, we can guarantee that $T_{1} < T_{2}$.
+
+\subsection{Let $S_{n}=\frac {T_{1}} {T_{m}}$ be the speedup obtained by a multiprocessor system and $E= \frac {S_{n}} {n}$ be the efficiency of the system. Calculate for steps 2 both Sn and E.}
+Here $T_{m} = T_{2} = 2 \times r \times L + (k+r) \times \log_{2} m$. \\
+\begin{center}
+$S_{n} = \frac {T_{1}} {T_{m}} = \frac {2rn} {2rL + (k+r) \log_{2} m}$ \\
+$ = \frac {2rn} {2r \frac {n} {m} + (k+r) \log_{2} m}$
+\end{center}
+
+And the E should be 
+\begin{center}
+$E = \frac {S_{n}} {n} = \frac {2rn} {n(2r \frac {n} {m} + (k+r) \log_{2} m)}$
+$ =  \frac {2r} {2r \frac {n} {m} + (k+r) \log_{2} m}$
+\end{center}
+
+\subsection{Calculate the values of each step for the following specific configuration  n=4096, m=256, k=5 cycles, r=2 cycles.}
+
+$T_{1} = 2rn = 2 \times 2 \times 4096 = 16348$ \\
+$T_{2} = 2rL + (k+r) \log_{2} m = 2 \times 2 \times \frac {4096} {256} + (5+2) log_{2} 256 = 120$ \\
+$S_{n} = \frac {2rn} {2rL + (k+r) \log_{2} m} = \frac {16348} {120} = 136.23$ \\
+$E = \frac {2r} {2r \frac {n} {m} + (k+r) \log_{2} m} = \frac {16348} {120 \times 4096} = 0.033$
+\end{document}
