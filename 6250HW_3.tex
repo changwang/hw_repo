@@ -1,0 +1,27 @@
+\documentclass[12pt,a4paper]{report}
+
+\title{Homework 3}
+\author{Chang Wang}
+\begin{document}
+
+\maketitle
+
+\section{}
+\subsection{Assume that due to their low cost, a wider word fetch scheme that fetches 4 and 2 words per cycle can be used with chips 1 and 2, respectively. Chip 3 implementation is cost-effective only for single word fetch Also, assume that in 25\% of the fetch cycles, half of the words fetched in wider word fetch schemes are useless. Estimate the relative bandwidths of the three systems.}
+
+The bandwidth is a measure of the number of data units that can be accessed per second. \\
+\begin{center}
+\end{center}
+$bandwidth_{1} = \frac {4 * (1 - 25\% * 50\%)} {1} = 4 * (1 - \frac {1} {8}) = 3.5$ \\[1cm]
+$bandwidth_{2} = \frac {2 * (1 - 25\% * 50\%)} {1} = 2 * (1 - \frac {1} {8}) = 1.75$ \\[1cm]
+$bandwidth_{3} = \frac {1 * 1} {1} = 1$
+
+\subsection{Assume that the cost of the CPU is 25\% of the total cost of a computer system. It is possible to increase the speed of the CPU by a factor of 10 by increasing the cost also by 10 times. The CPU typically waits for I/O about 30\% of the time. From a cost/performance viewpoint, is increasing the speed tenfold desirable?}
+
+Clearly this claim is not true. \\[0.3cm]
+Assume system's cost is $T$ and CPU's performance is $P$; according to the prerequisite, we can get CPU's cost is $\frac {1}{4} T$. \\[0.3cm]
+Increasing CPU's speed 10 times, so its performance now is $10P$, but also its cost is 10 times $10*\frac{1}{4}T = 2.5T$. \\[0.3cm]
+One thing is, although we increased CPU's speed, but the cost of I/O remains, still is $30\%T$. \\[0.3cm]
+So the final cost/performance rate is $\frac{2.5T + 0.3T}{10P} > \frac{T}{10P}$, which means speed tenfold increasing is not desirable.
+
+\end{document}
