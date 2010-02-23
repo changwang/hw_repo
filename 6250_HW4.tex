@@ -1,0 +1,61 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage{amssymb,amsmath}
+
+\title{Homework 4}
+\author{Chang Wang}
+\begin{document}
+
+\maketitle
+
+\section{It is required to compute the sum of 32K 32-bit numbers. Estimate the time required for this computation on:}
+\subsection{A 32-bit SISD}
+Before getting into the detail, here are some assumptions. \\[0.15cm]
+1. The ADD operation takes $T_{1}$ cycles; \\[0.15cm]
+2. The communication between processors takes $T_{2}$ cycles. \\[0.15cm]
+In this case, there is only one processor to compute the numbers, it is a serial operation.
+\begin{equation*}
+\begin{split}
+Time_{1}& = (32 * 2^{10} - 1) * T_{1} \\
+		& \approx 2^{15} * T_{1}
+\end{split}
+\end{equation*}
+
+\subsection{A 16-bit SISD}
+In this case, there still is one processor, which but is 16-bit. In order to compute 32-bit numbers, here we assume it computes low 16-bit first, then compute high 16-bit and carry on point if it has. So this is also a serial operation.
+\begin{equation*}
+\begin{split}
+Time_{2}& = (32 * 2^{10} - 1) * 2T_{1} \\
+         & \approx 2^{16} * T_{1}
+\end{split}
+\end{equation*}
+
+\subsection{An SIMD with 32 32-bit processors}
+In this case, we have 32 arithmetic-logic processors which can work simultaneously. At first, each processor computes $2^{10}$ numbers at the same time, which are serial operations; then there are 32 partial sums. Now pair each two processors together to compute the sum of whole numbers.
+\begin{equation*}
+\begin{split}
+Time_{3}& = (2^{10} - 1) * T_{1} + \log_{2} 32 * (T_{1} + T_{2}) \\
+& \approx 2^{10} * T_{1} + 5 * (T_{1} + T_{2})
+\end{split}
+\end{equation*}
+
+If $T_{2}$ is approaching $T_{1}$, we could omit $T_{2}$ here. But in practice, communication between processors definitely is a overloaded work, which can not easily be ignored.
+\subsection{An SIMD with 16 32-bit processors}
+In this case, using the same approach above. \\
+\begin{equation*}
+\begin{split}
+Time_{4}& = (2^{10} -1 ) * 2T_{1} + \log_{2}32 * 2(T_{1} + T_{2}) \\
+& \approx 2^{11} * T_{1} + 10 * (T_{1} + T_{2})
+\end{split}
+\end{equation*}
+
+\section{What is the best way to implement the computation of Problem (2.8) on an MIMD? That is, how do you minimize the overhead involved?}
+If it just needs to minimize the overhead, we can use only one arithmetic-logic processor, then there is no communication cost involved. But it maximizes the computing cost at the same time. So we should find a balance to minimize the whole cost.
+Suppose there are n 32-bit processors (without losing generality, assume n is a factor of $32 * 2^{10}$.) At the beginning, n processors compute simultaneously, after that there will be n partial sums. Then each two processors communicate each other to compute the sum.
+\begin{equation*}
+\begin{split}
+Time & = (\frac {32 * 2^{10}} {n} - 1) * T_{1} + \log_{2}n * (T_{1} + T_{2}) \\
+& \approx (\frac {32 * 2^{10}} {n}) * T_{1} + \log_{2}n * (T_{1} + T_{2})
+\end{split}
+\end{equation*}
+If we know the relation between $T_{1}$ and $T_{2}$, then we can solve the equation to get its minimum value.
+\end{document}

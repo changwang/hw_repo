@@ -1,0 +1,175 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage{amssymb,amsmath}
+
+\title{Homework 4}
+\author{Chang Wang}
+
+\begin{document}
+
+\maketitle
+
+\section{}
+\subsection{For the DTM (special case of NDTM) described on pages 24 and 25 of your textbook derive the SAT sets U and C resulting from the polynomial transformation of a NDTM to the satisfiability SAT problem. Also calculate the cardinalities of these sets.}
+
+\begin{center}
+Set U
+\end{center}
+
+Variable Q: For $\forall q_{k} \in Q$ where $0 \le k \le |Q| - 1 = r$ and each $0 \le i \le p(n)$, $Q_{i,k}$ is the boolean variable whose truth is equivalent to the statement that ``After $i^{th}$ step of the computation, program M is exactly in state $q_{k}$''
+
+\begin{center}
+$Q_{i,k}$ $|$ $0 \le i \le p(n)$ \& $0 \le k \le r$
+\end{center}
+
+Variable H: For each $0 \le i \le p(n)$ and each $-p(n) \le j \le p(n)+1$, $H_{i,j}$ is true if and noly if the tape head 
+is located at square j during step i of the computation.
+
+\begin{center}
+$H_{i,j}$ $|$ $0 \le i \le p(n)$ \& $-p(n) \le j \le p(n)+1$
+\end{center}
+
+Variable S: For each $s_{k} \in \Gamma$ where $0 \le k \le |\Gamma| - 1 = v$, each $0 \le i \le p(n)$ and each $-p(n) \le j \le p(n)+1$, $S_{i,j,k}$ is true if and only if square j contains symbol $s_{k}$ during step i of the computation.
+
+\begin{center}
+$S_{i,j,k}$ $|$ $0 \le i \le p(n)$ \& $-p(n) \le j \le p(n)+1$ \& $0 \le k \le v$
+\end{center}
+
+Before getting into the detail, some points need to be clarified.
+
+Numbers like r and v are constants and related to program M but not to language L, so which will not contribute to the time complexity of input string. Then when we compute the complexity of cardinality of each clause, we could omit these constants. \\[0.2cm]
+
+Cardinality of Q: 
+\begin{equation*}
+(r+1) * (p(n) + 1) = O(p(n))
+\end{equation*}
+
+Cardinality of H: 
+\begin{equation*}
+(p(n)+1) * (2p(n)+1) = O(p(n)^{2})
+\end{equation*}
+
+Cardinality of S: 
+\begin{equation*}
+(p(n)+1) * (2p(n)+1) * (v+1) = O(p(n)^{2})
+\end{equation*}
+
+\begin{center}
+Set C
+\end{center}
+
+Group 1: At each step i, program M is in exactly one state.
+
+For every $0 \le i \le p(n)$, $0 \le j \le r$
+
+\begin{equation*}
+\begin{split}
+&Q_{i,0} \vee Q_{i,1} \vee ... \vee Q_{i,r-1} \vee Q_{i,r} \\
+&\overline{Q_{i,j} \wedge Q_{i,j^{'}}}  , j \ne j^{'}
+\end{split}
+\end{equation*}
+
+Group 2: At each step i, tape head is in exactly one location.
+
+For every $0 \le i \le p(n)$, $-p(n) \le j \le p(n)+1$
+
+\begin{equation*}
+\begin{split}
+&H_{i,-p(n)} \vee H_{i,1-p(n)} \vee ... \vee H_{i, p(n)-1} \vee H_{i,p(n)} \\
+&\overline{H_{i,j} \wedge H_{i,j^{'}}}  , j \ne j^{'}
+\end{split}
+\end{equation*}
+
+Group 3: At each step i, square j is exactly contains symbol $s_{k}$. \\
+For every $0 \le i \le p(n)$, $-p(n) \le j \le p(n)+1$ and $0 \le k \le v$
+
+\begin{equation*}
+\begin{split}
+&S_{i,j,1} \vee S_{i,j,2} \vee ... \vee S_{i,j,v-1} \vee S_{i,j,v} \\
+&\overline{S_{i,j,k} \wedge S_{i,j,k^{'}}}  , k \ne k^{'}
+\end{split}
+\end{equation*}
+
+Group 4: Initially, the machine is in state 0, tape head is scanning square 1 and square 0 contains symbol ``blank'', square 1 to n contains string $s_{k_{1}}s_{k_{2}}...s_{k_{n}}$ which defines the problem instance I, meanwhile the rest squares in the tape are blank.
+\begin{equation*}
+\begin{split}
+& Q_{0,0} \\
+& H_{0,1} \\
+& S_{0,0,b} \\
+& S_{0,1,k_{1}} , S_{0,2,k_{2}} , ... , S_{0,n-1,k_{n-1}} , S_{0,n,k_{n}} \\
+& S_{0,n+1,b}, S_{0,n+2,b}, ... , S_{0,p(n)-1,b}
+\end{split}
+\end{equation*}
+
+Group 5: By at most the $p(n)^{th}$ step, the machine has reached the halt state, and is then scanning square 0, which contains the symbol $s_{k_{y}}$.
+\begin{equation*}
+\begin{split}
+& Q_{p(n),0} \\
+& S_{p(n),0,k_{y}} \\
+& H_{p(n),0}
+\end{split}
+\end{equation*}
+
+Group 6: In this case, it contains two subgroups:
+
+1. For any step i, tape head does not scan square j, then square j remains its content at step $i+1$;
+
+2. For each step i, $0 \le i \le p(n)$, the configuration of M at step $i+1$ follows by a single application of the transition fuction $\delta$ from the configuration at previous step i.
+\begin{equation*}
+\begin{split}
+& \overline{S_{i,j,l}} \vee H_{i,j} \vee S_{i+1,j,l} \\
+& \overline{S_{i,j,l}} \vee \overline{Q_{i,k}} \vee \overline{H_{i,j}} \vee Q_{i+1,l^{'}} \\
+& \overline{S_{i,j,l}} \vee \overline{Q_{i,k}} \vee \overline{H_{i,j}} \vee H_{i+1,j+\Delta} \\
+& \overline{S_{i,j,l}} \vee \overline{Q_{i,k}} \vee \overline{H_{i,j}} \vee S_{i+1,j,l^{'}} \\
+\end{split}
+\end{equation*}
+
+Cardinality of G1: 
+\begin{equation*}
+\begin{split}
+& r * (p(n)+1) + (p(n)+1) * \frac {r(r-1)}{2} \\
+&= O(p(n))
+\end{split}
+\end{equation*}
+
+Cardinality of G2: 
+\begin{equation*}
+\begin{split}
+& (p(n)+1) * (2p(n)+1) + (p(n)+1) * \frac {(2p(n)+1)*2p(n)}{2} \\
+&= O(p(n)^{3})
+\end{split}
+\end{equation*}
+
+Cardinality of G3: 
+\begin{equation*}
+\begin{split}
+& (p(n)+1) * (2p(n)+1) * v + (p(n)+1) * (2p(n)+1) * \frac {v(v-1)}{2} \\
+&= O(p(n)^{2})
+\end{split}
+\end{equation*}
+
+Cardinality of G4:
+
+Each clause only contains one literal,
+\begin{equation*}
+\begin{split}
+O(1)
+\end{split}
+\end{equation*}
+
+Cardinality of G5:
+
+Each clause only contains one literal,
+\begin{equation*}
+\begin{split}
+O(1)
+\end{split}
+\end{equation*}
+
+Cardinality of G6:
+\begin{equation*}
+\begin{split}
+& 2(p(n)+1)^{2} * (v+1) + 6p(n)(p(n)+1)*(r+1)(v+1) \\
+& = O(p(n)^{2})
+\end{split}
+\end{equation*}
+\end{document}
