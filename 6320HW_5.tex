@@ -1,0 +1,60 @@
+\documentclass[12pt]{report}
+
+\linespread{1.3}
+
+\title{Homework 5}
+\author{Chang Wang}
+
+\begin{document}
+
+\maketitle
+
+\section{Restriction}
+\subsection{LONGEST PATH (LP)}
+In this case, we can reduce Hamiltonian Circle Problem (HC) to LP. \\
+If there is a HC in G=(V, E), it is clearly that the path in HC is the longest path in G. Because HC covers all the vertices in G and length of path is $|V|=k$. \\
+Conversely, if there is a LP in G, which tells us the length of the path is $k=|V|$. So the longest path visits all the vertices in G without repetition. This is the definition of HC. \\
+So it is clearly that $LP \in NP-C$.
+
+\subsection{SET PACKING (SP)}
+In this case, we use 3DM problem reduced to SP. Actually, 3DM is a special case of SP.\\
+Suppose each element in 3DM, $d_{i} = \{w_{f(i)}, x_{g(i)}, y_{h(i)}\} \in W \cup X \cup Y$ and $d_{i} \cap d_{j} = \phi, 1 \le i, j \le |W|=|X|=|Y|$, this satisfies the definition of SP. \\
+Conversely, suppose there is a SP, and each subset $s_{i} \in S$ we have $|s_{i}| = 3$ and $s_{i} \cap s_{j} = \phi$. Then from each $s_{i}$ pick up one element into W, one element in X and one element into Y, then the constructed structure is definitely a 3DM. \\
+$SP \in NP-C$ is proven.
+
+\subsection{PARTITION INTO HAMILTONIAN SUBGRAPHS (PHS)}
+Apparently, PHS is similar to Partition into Triangles problem (PIT), if for each $|V_{k}| = 3$ and $\bigcup_{i=1}^{k}V_{i} = |V|$, of course triangle is a Hamiltonian Circuit, PHS could be considered as PIT problem, so Actually PIT problem is a just a special case of PHS problem. \\
+Given a graph G = (V, E), $|V| = 3q$ for a positive integer q. if there is a partition of V into q disjoint sets $V_{1}, V_{2}, ..., V_{q}$, we can say that G is partitioned into q subgraphs which have a Hamiltonian Circuits. \\
+Then the problem is proven that $PHS \in NP-C$.
+
+\section{Local Replacement}
+
+\subsection{FEEDBACK VERTEX SET (FVS)}
+This problem looks pretty like Vertex Cover Problem, so I'd like to transform VC to FVS. \\
+First given a graph G=(V,E), $K \le |V|$, and G is a undirected graph. We transform $G^{'}$ from G, where $G^{'} = (V^{'}, E^{'})$ is a directed graph and G has a vertex cover of size K iff $G^{'}$ has a feedback vertex set of size $K^{'}$. \\
+We construct $G^{'}$ is to have coverage of directed cycles in $G^{'}$ correspond to coverage of edges in G. Replacing each edge $(u,v) \in E$ by two directed edges $(u^{'}, v^{'}), (v^{'}, u^{'}) \in E^{'}$. So now $V^{'} = V$ and $E^{'} = 2E$. Here take a look at the transformation function, substitute one edge in  G to two edges in $G^{'}$. The edge is related to the vertex in G, the worst case is $|E| = \frac {|V|(|V|-1)}{2}$, so it takes $|V| \times (|V|-1)$ step to finish the transformation at most. Apparently it is polynomial transformation. \\
+If there is a vertex cover $V_{vc}$ in G, then it covers every directed cycle in $G^{'}$, because any cycle in $G^{'}$ involves a edge in G. \\
+Conversely, if there is FVS $V_{fvs}$ covers all the directed cycles in $G^{'}$, we know that each edge in $G^{'}$ correspond to a edge in G, which means $V_{fvs}$ covers all the edge in G. \\
+Then the problem is proven that $FVS \in NP-C$.
+
+\subsection{EXACT COVER BY 4-SETS (X4C)}
+Of course, to prove this problem, the simplest choice is Exact Cover by 3-Sets (X3C). \\
+Given a finite set X with $|X|=3q$ and a collection C of 3-element subsets of X. Then we transform this structure into X4C problem. Assume each element $c_{j} \in C$ where $1 \le j \le q$ and $|c_{j}| = 3$. For each element $c_{j}$, add a distinct element $k_{j}$ where $1 \le j \le q$. Now we have a finite set $X^{'} = X \cup (\bigcup_{j=1}^{q}k_{j})$, where $|X^{'}| = 4q$, and a collection $C^{'}$ of 4-element subsets of X, where $c_{j}^{'} = c_{j} \cup k_{j}$. It is easy to see that this transformation takes q steps to complete, which related to the size of collection C. Then it is a polynomial transformation. \\
+If the set X contains a 3-element cover, due to the elements $k_{j}$ added is distinct from each other and existing elements, it is clearly that for any subset in $C^{'}$ of $X^{'}$, that $c^{'}_{i}, c^{'}_{j} \in C^{'}$, we have $c^{'}_{i} \cap c^{'}_{j} = \phi$, which satisfies the definition of X4C. \\
+If the set $X^{'}$ contains a 4-element cover, for any subset $c^{'}_{i}, c^{'}_{j} \in C^{'}$, there is no common element in $c^{'}_{i}$ and $c^{'}_{j}$. Here we can remove any single element for each $c^{'}_{j}$, and they will remain the same configuration that $c^{'}_{i} \cap c^{'}_{j} = \phi$, and this is the definition of X3C. \\
+Now the problem is proven that $X4C \in NP-C$.
+
+\subsection{DOMINATING SET (DS)}
+According to the definition of DS, it is similar to Vertex Cover problem. One is required to dominate all the edges, one is required to dominate all the vertex. \\
+Now we build a new vertex $v_{e}$ for each edge $e \in G$, then each edge $e = (u, v)$ of G is replaced by a triangle of edges: $(u, v), (u, v_{e}), (v, v_{e})$. The new graph $G^{'} = (V^{'}, E^{'})$, where $V^{'} = V \cup \bigcup^{|V|}v_{e}$ and $E^{'} = E \cup \bigcup_{v \in E}(v, v_{e})$. The transformation is to create new vertex and edges, which is related to the size of vertex, so it is a polynomial transformation. \\
+Now we have to prove G has a vertex cover of size K iff $G^{'}$ has dominating set of size K. If there is a vertex cover $V_{vc}$ in G, it is true there is a Dominating Set $V_{vc}$ in $G^{'}$. Because every edge of G has a vertex in $V_{vc}$ incident to it, and so every triangle of vertices in $G^{'}$ has at least one member in $V_{vc}$, and so every vertex of $G^{'}$ is either in $V_{vc}$ or $V - V_{vc}$. If G has a vertex cover K, then $G^{'}$ has a dominating set of size K. \\
+Then if there a Dominating Set $V_{ds}$ in $G^{'}$. Firstly, if all vertices in $V_{ds}$ belong to G, it is apparently that $V_{ds}$ is also a Vertex Cover in G. Because according to the definition of DS, there is always a edge connected vertices from $V_{ds}$ and $V^{'} - V_{ds}$. This is a Vertex Cover. Another situation is, if there are some vertices in $V_{ds}$ is the created edge $v_{e}$ rather than a vertex in G, then we have to replace it by one of the vertex in G for the edge's endpoints and it will still be dominating set. Because $v_{e}$ only dominate 3 vertices including itself in the triangle. The other two vertices in this triangle also at least dominate 3 vertices. Once replacing all the vertices $v_{e}$ in $V_{ds}$, the new $V_{ds}$ forms a vertex cover of G, because every edge of G must have at least one of its endpoints in $V_{ds}$ for $V_{ds}$ to be a dominating set of $G^{'}$. \\
+we finished proving that $DS \in NP-C$.
+
+
+
+
+
+
+
+\end{document}
