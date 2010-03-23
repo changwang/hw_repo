@@ -1,0 +1,101 @@
+\documentclass[12pt]{report}
+\linespread{1.3}
+\usepackage[pdftex]{graphicx}
+\usepackage{tikz}
+
+\title{Homework 6}
+\author{Chang Wang}
+
+\begin{document}
+
+\maketitle
+
+4.2 The following code segment need to be executed on a vector processor with a five-stage floating-point adder and a six-stage floating-point multiplier:
+\begin{center}
+$A = B + C$\\
+$D = s * A$\\
+$E = D + B$
+\end{center}
+where A, B, C, D, E are 32-element vectors and $s$ is a scalar. Assume that each stage of the adder and multiplier consumes one cycle, memory load, and store each consume one cycle and there are required numbers of memory paths. Derive the computation time if (1) chaining is not allowed (2) chaining is allowed. Show the timing diagram for each case.
+
+(1) Chaining is not allowed. \\
+In this case, the code consists of three parts, two pipeline additions and a scalar-vector multiply. \\
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.6]{addition1.png}
+\end{center}
+\end{figure}
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.6]{multiply.png}
+\end{center}
+\end{figure}
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.6]{addition2.png}
+\end{center}
+\end{figure}
+
+The total computation time is: $(7 + 31) + (8 + 31) + (7 + 31) = 115$ cycles. \\
+
+(2) Chaining is allowed. \\
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.8]{chaining.png}
+\end{center}
+\end{figure}
+
+The total computation time is: $(7 + 8 + 7) + 31 = 53$ cycles. \\
+
+4.3 Solve the above problem, assuming that only one path to and from memory is available. \\
+
+(1) Chaining is not allowed. \\
+In this case, the code consists of three parts, two pipeline additions and a scalar-vector multiply. \\
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.6]{single_path_addition1.png}
+\end{center}
+\end{figure}
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.6]{single_path_multply.png}
+\end{center}
+\end{figure}
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.6]{single_path_addition2.png}
+\end{center}
+\end{figure}
+
+The total computation time is: $(8 + 31) + (9 + 31) + (8 + 31) = 118$ cycles. \\
+
+(2) Chaining is allowed. \\
+
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.8]{single_path_chaining.png}
+\end{center}
+\end{figure}
+
+The total computation time is: $(8 + 9 + 7) + 31 = 55$ cycles. \\
+
+4.4 Assume that the vector processor has vector registers that can hold 64 operands and data can be transferred between these registers in blocks of 64 operands every cycle. Solve Problem 4.2 with these assumptions. \\
+In this case, it is similar to Problem 4.2. Because vector registers can hold 64 operands and transfer them to other registers in one cycle. \\
+There are 32 elements in each vector, so they can be fetched in one cycle, stored in one cycle. \\
+(1) Chaining is not allowed.\\
+In first addition procedure, 1 cycle for fetching, 5 cycles for add time, 1 cycle for storage, then after start-up time, there is an addition result each cycle. So the partial computation time is: $(1 + 5 + 1) + 31 = 38$ cycles.\\
+In multiplication procedure, 1 cycle for fetching, 6 cycles for multiply time, 1 cycle for storage, then after start-up time, there is a multiplication result each cycle. So the partial computation time is: $(1 + 6 + 1) + 31 = 39$ cycles.\\
+The last addition procedure is the same to first addition procedure.
+The total computation time is: $38 + 39 + 38 = 115$ cycles.\\
+(2) Chaining is allowed.\\
+In this case, each procedure is chained together, so the start-up time now is: $1 + 5 + 1 + 1 + 8 + 1 + 1 + 5 + 1$ = 22 cycles, which is corresponding to above procedures.\\
+The total computation time now is: $22 + 31 = 53$ cycles.
+
+\end{document}
