@@ -1,0 +1,37 @@
+\documentclass[12pt]{report}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{tikz}
+
+\linespread{1.5}
+\title{Homework 6}
+\author{Chang Wang}
+
+\begin{document}
+
+\maketitle
+
+\subsection{Prove that the Vertex Cover remains NP-C even if we restrict the graphs to be even graphs.}
+
+Apparently, Vertex Cover in even graph ($VC_{even}$) is a special case of Vertex Cover ($VC$), so we can reduce $VC$ to $VC_{even}$. \\
+Given an arbitrary graph $G=(V,E)$ and a positive integer $K \le |V|$, then construct a graph $G^{'} = (V^{'}, E^{'})$ from G, where vertex degree of each vertex in $G^{'}$ is even. Then we have to prove that, there is a Vertex Cover in G if and only if there is a $VC_{even}$ in $G^{'}$. \\
+Of course given any instance of $VC_{even}$, we can check it in polynomial time to find out whether it is a YES instance of $VC_{even}$, because it is a special case of $VC$. So, $VC_{even} \in NP$.\\
+We construct $G^{'}$ by following steps: \\
+1. Introduce a triangle T, where the vertices are $t_{1}, t_{2}, t_{3}$; \\
+2. Connect each vertex in G whose degree is odd to $t_{1}$; \\
+Then we have $G^{'} = (V^{'}, E^{'})$ where
+\begin{center}
+$V^{'} = V \cup \{ t_{1}, t_{2}, t_{3} \}$ \\
+$E^{'} = E \cup \{ (t_{1},t_{2}), (t_{2},t_{3}),(t_{3},t_{1}) \} \cup \{ (v,t_{1}) | v \in V$ and $v$ has odd degree $\}$
+\end{center}
+\begin{figure}[hb]
+\begin{center}
+\includegraphics[scale=0.5]{vc_even.png}
+\end{center}
+\end{figure}
+The transformation here needs to go through all vertices in $G$ to find out the vertices with odd degree, then connect each one to vertex $t_{1}$, obviously it can be completed within polynomial time, because it is related to the number of vertices in $G$. \\
+We also must show that every vertex in $G^{'}$ has even degree. Assume there are $m$ edges in $G$, the sum of the degree of all vertices is $2m$, because each edge contribute 1 degree to two endpoints. Since $2m$ and the sum of the even degree vertices are both even, then the sum of the odd degree vertex must be even too. Since their degree is odd, the number of the odd vertices must be even to make the sum to be even. We know that the degree of each vertices in triangle is even. $t_{1}$ remains even degree after adding even connections, but all the vertices in $G$ have odd degree are now changed to even degree by increasing one connection. So every vertex in $G^{'}$ has even degree.\\
+Now we have to prove if there is a Vertex in G if and only if there is a $VC_{even}$ in $G^{'}$. Firstly, if there is a Vertex Covert in G, where $C \subseteq V$ and $|C| = K$, of course there is a Vertex Cover in $G^{'}$ if $C^{'} = C \cup \{t_{1}, t_{2}\}$ or $C^{'} = C \cup \{t_{1}, t_{3}\}$ where $|C^{'}| = K+2$. \\
+Conversely, if there is a Vertex Cover in $G^{'}$ of cardinality of $K^{'}$. At least two of vertices $t_{1}, t_{2}, t_{3}$ should be in the Vertex Cover $C^{'}$, in order to cover the triangle. Since all edges in $G^{'}$ are covered by $K + 2$ vertices, remaining edges must be covered by $K$ vertices, and those remaining edges must be exactly from G, which means there is also a Vertex Cover in G. \\
+Then the problem is proven that Vertex Cover remains NP-C even if we restrict the graphs to be even graphs.
+\end{document}
