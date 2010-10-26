@@ -1,0 +1,91 @@
+
+\documentclass[12pt,a4paper]{amsart}
+
+\usepackage{fullpage}
+
+\linespread{1.35}
+
+\begin{document}
+
+1. customers (names) the zip of whose address is either 49008 or 49009. \\
+$\rho (ZIPSOFTWO, \sigma_{ZIP=49008 \vee ZIP=49009}(ZIP))$ \\
+$\pi_{CNAME}(ZIPSOFTWO \Join CUSTOMERS)$ \\
+
+Explanation: First statement selects all the tuples in ZIP, which have zip either 49008 or 49009, and renames it to ZIPOFTWO. Then I join it with CUSTOMERS (natural join, with equality specified on the ZIP column) to get customers whose address zip is either 49008 or 49009. Finally I project the names of customers. \\
+
+2. employees (names) who have customers with the zip code of either  49008 or 49009. \\
+$\rho (ZIPSOFTWO, \sigma_{ZIP=49008 \vee ZIP=49009}(ZIP))$ \\
+$\rho (CUSTOMERSWITHEITHERZIP, ZIPSOFTWO \Join CUSTOMERS) $ \\
+$\rho (ORDERSFROM, CUSTOMERSWITHEITHERZIP \Join ORDERS)$ \\
+$\pi_{ENAME}(ORDERSFROM \Join EMPLOYEES)$ \\
+
+Explanation: First statement selects all the tuples in ZIP, which has zip either 49008 or 49009, and renames it to ZIPOFTWO. Then I join it with CUSTOMERS to get customers whose address zip is either 49009 or 49008, rename it to CUSTOMERSWITHEITHERZIP. Next I use natural join with ORDERS to get all the orders that are made by the customers whose address zip is either 49009 or 49008, and rename it to ORDERSFROM. Then I join it with EMPLOYEES and project the names of employees who have customers with the zip code of either 49008 or 49009. \\
+
+3. employees (names) who have both 49008-zipcode customers and 49009-zipcode customers. \\
+$\rho (ZIPSOF49008, \sigma_{ZIP=49008}(ZIP))$ \\
+$\rho (ZIPSOF49009, \sigma_{ZIP=49009}(ZIP))$ \\
+$\rho (CUSTOMERSWITH49008, ZIPSOF49008 \Join CUSTOMERS)$ \\
+$\rho (CUSTOMERSWITH49009, ZIPSOF49009 \Join CUSTOMERS)$ \\
+$\rho (ORDERSFROM49008, CUSTOMERSWITH49008 \Join ORDERS) $ \\
+$\rho (ORDERSFROM49009, CUSTOMERSWITH49009 \Join ORDERS) $ \\
+$\rho (EMPSISSUED49008, \pi_{ENO, ENAME} (ORDERSFROM49008 \Join EMPLOYEES))$ \\
+$\rho (EMPSISSUED49009, \pi_{ENO, ENAME} (ORDERSFROM49009 \Join EMPLOYEES))$ \\
+$\pi_{ENAME} (EMPSISSUED49008 \bigcap EMPSISSUED49009) $ \\
+
+Explanation: First, find all tuples in ZIP has zip code 49008, rename it to ZIPSOF49008, then find all tuples in ZIP has zip code 49009, rename it to ZIPSOF49009. Natural join ZIPSOF49008 with CUSTOMERS to get all customers whose zip code is 49008, rename it to CUSTOMERSWITH49008, the same to all customer whose zip code is 49009. Then I join CUSTOMERSWITH49008 with ORDERS to find all orders that come from customers whose zip code is 49008, rename it to ORDERSFROM49008, the same way to get all orders come from customers whose zip code is 49009. Next join ORDERSFROM49008 with EMPLOYEES, I can have all the employess whose customers are from zip code 49008, rename it to EMPSISSUED49008, also I can get EMPSISSUED49009. Finally using intersection to get employees who have both 49008-zipcode customer and 49009-zipcode customers, and project the names of those employees. \\
+
+4. customers (names and IDs) who live in Kalamazoo, excluding customer \#1111 who's a special case. \\
+$\rho (CUSTOMERSLIVEINK, \pi_{CNAME, CID}(\sigma_{CITY='Kalamazoo'}(ZIP) \Join CUSTOMERS)) $ \\
+$CUSTOMERSLINVEINK - \pi_{CNAME, CID}(\sigma_{CID=1111}(CUSTOMERS))$ \\
+
+Explanation: Find all tuples in ZIP have city 'Kalamazoo', natural join it with CUSTOMERS to get all the customers who live in Kalamazoo, project name and id of the intermediate instance, and rename it to CUSTOMERSLIVEINK. Then get the special case customer \#1111, and remove that special case from CUSTOMERSLIVEINK by using set-difference. \\
+
+5. customers (names) who've ordered products through the employee named 'Jones'. \\
+$\rho (EMPJONES, \sigma_{ENAME='Jones'}(EMPLOYEES))$ \\
+$\rho (ORDERSISSUEDBYJONES, EMPJONES \Join ORDERS) $ \\
+$\pi_{CNAME} (ORDERSISSUEDBYJONES \Join CUSTOMERS) $ \\
+
+Explanation: Find the employee who named 'Jones', name it EMPJONES. Then by using natural join with ORDERS to get all the orders are issued by employee 'Jones', rename it to ORDERSISSUEDBYJONES. Finally I join it with CUSTOMERS to get all the customers who made order through employee 'Jones', and project names of those customers. \\
+
+6. customers (names) who've not ordered 'Sleeping Beauty'. \\
+$\rho (PARTSSB, \sigma_{PNAME='Sleeping Beauty'}(PART))$ \\
+$\rho (ORDERSHAVESB, PARTSSB \Join ORDER\_LINES \Join ORDERS) $ \\
+$\rho (CUSTOMERSORDEREDSB, \pi_{CNAME, CID}(ORDERSHAVESB \Join CUSTOMERS))$ \\
+$\pi_{CNAME} (\pi_{CNAME, CID} (CUSTOMERS) - CUSTOMERSORDEREDSB)$ \\
+
+Explanation: Find the all the part named 'Sleeping Beauty', name it PARTSSB. Then find all the orders contains that part by using two natural join through PARTSSB, ORDER\_LINES and ORDERS. Next find all the customers who ordered 'Sleeping Beauty', name it CUSTOMERSORDEREDSB. Finally remove all those customers from CUSTOMERS, the left are the customers who've not ordered 'Sleeping Beauty'. \\
+
+7. all the different possible pairs of videos (PNAMEs). (Don't, of course, include 2 of the same product in a pair). \\
+$\rho (PARTPAIRS (1 \rightarrow PNO1, 2 \rightarrow PNAME1, 3 \rightarrow PNO2, 4 \rightarrow PNAME2),  \\
+\pi_{PNO, PNAME}(PART) \times \pi_{PNO, PNAME}(PART)) $ \\
+$\pi_{PNAME1, PNAME2} (\sigma_{PNO1 < PNO2}(PARTPAIRS))$ \\
+
+Explanation: Find all possible pairs by using cross-product, rename it to PARTPAIRS with four attributes PNO1, PNAME1, PNO2, PNAME2. Right now PARTPAIRS contains tuples have same product. In order to get rid of that, I select all the pairs whose PNO1 is less than PNO2. This could remove pairs like (PNAME1, PNAME1) and (PNAME2, PNAME2), also remove one of two like this (PNAME1, PNAME2), (PNAME2, PNAME1), because actually they are the same. \\
+
+8. all the different possible pairs of videos (PNAMEs) where the first has a price 24.99 and the second has a price of 19.99. \\
+$\rho (PARTPAIRS (1 \rightarrow PNO1, 2 \rightarrow PNAME1, 3 \rightarrow UNIT\_PRICE1, \\
+ 4 \rightarrow PNO2, 5 \rightarrow PNAME2, 6 \rightarrow UNIT\_PRICE2), \\
+ \pi_{PNO, PNAME, UNIT\_PRICE}(PART) \times \pi_{PNO, PNAME, UNIT\_PRICE}(PART)) $ \\
+$\pi_{PNAME1, PNAME2} (\sigma_{PNO1 \neq PNO2 \wedge  UNIT\_PRICE1 = 24.99 \wedge UNIT\_PRICE2 = 19.99}(PARTPAIRS))$ \\
+
+Explanation: This one is pretty like the previous one, but I kept attribute UNIT\_PRICE.  In order to get the result, select all pairs that PNO1 is not equal to PNO1, and UNIT\_PRICE1 is equal to 24.99 and UNIT\_PRICE2 is equal to 19.99. \\
+
+9. customers (numbers) who ordered at least one item that customer \#1111 ordered. \\
+$\rho (ORDERSFROMC1111, \sigma_{CNO=1111}(ORDERS)) $ \\
+$\rho (PARTSC1111ORDERED, ORDERSFROMC1111 \Join ORDER\_LINES \Join PARTS) $ \\
+$\rho (ORDERSWITHPARTS, PARTSC1111ORDERED \Join ORDER\_LINES \Join ORDER) $ \\
+$\pi_{CNO} (\sigma_{CNO \neq 1111}(ORDERWITHPARTS)) $ \\
+
+Explanation: first find out which order is from customer \#1111, by selecting ORDERS with customer number is \#1111, name it ORDERSFROMC1111. Then join it with ORDER\_LINES and PARTS I can get all the parts that customer \#1111 has ordered. With all those parts, join it with ORDER\_LINES and ORDERS, I can get all the orders that ordered those parts which are also ordered by customer \#1111, name it ORDERSWITHPARTS. Removing customer \#1111 from customers, then project ORDERSWITHPARTS, I have all the customers who ordered at least one item that customer \#1111 ordered. \\
+
+10. customers (numbers) who ordered all the items as customer \#11111 ordered (although, they may have ordered additional items besides). \\
+$\rho (ORDERSFROMC1111, \sigma_{CNO=1111}(ORDERS)) $ \\
+$\rho (PARTSC1111ORDERED, ORDERSFROMC1111 \Join ORDER\_LINES \Join PARTS) $ \\
+$\rho (PARTSNOFROMC1111, \pi_{PNO}(PARTSC1111ORDERED)) $ \\
+$\rho (CUSTOMERORDERS, \sigma_{CNO \neq 1111}(ORDERS)) $ \\
+$\rho (PARTSORDERED, \pi_{PNO, CNO}(CUSTOMERORDERS \Join ORDER\_LINES \Join PARTS)) $ \\
+$PARTSORDERED / PARTSNOFROMC1111$  \\
+
+Explanation: Find all orders are from customer \#1111. Then join it with ORDER\_LINES and PARTS to get all parts ordered by customer \#1111, and project PNO on it. Next I select ORDERS to get all the orders from other customers, then get all the parts ordered by other customers by joining ORDER\_LINES and PARTS, project CNO and PNO on it. Finally using division I can get all customers who ordered all the items as customer \#1111 ordered. \\
+
+\end{document}
